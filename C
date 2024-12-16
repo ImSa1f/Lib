@@ -3136,13 +3136,25 @@ function MacLib:Window(Settings)
 					end
 
                     function DropdownFunctions:RefreshDropdown()
-                        if not self.Settings.Options or type(self.Settings.Options) ~= "table" then print('yo') return end
+                        if typeof(self.Settings.Options) == "function" then
+                            local success, result = pcall(self.Settings.Options)
+                            if success and type(result) == "table" then
+                                self.Settings.Options = result
+                            else
+                                warn("Failed to fetch options from function.")
+                                return
+                            end
+                        elseif type(self.Settings.Options) ~= "table" then
+                            warn("Options must be a table or function returning a table.")
+                            return
+                        end
+                    
                         self:ClearOptions()
+                    
                         for i, v in pairs(self.Settings.Options) do
                             addOption(i, v)
                         end
                     end
-                    
                 
 					function DropdownFunctions:IsOption(optionName)
 						if not optionName then return end
