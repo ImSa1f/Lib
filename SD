@@ -3135,39 +3135,11 @@ function MacLib:Window(Settings)
 						end
 					end
 
-                    function DropdownFunctions:RefreshDropdown(newOptionsSource)
-                        print("Refreshing dropdown...")
-                    
-                        -- Clear all existing options
+                    function DropdownFunctions:RefreshDropdown(newOptions)
+                        print("Refreshing dropdown with options:", newOptions)
                         self:ClearOptions()
-                    
-                        -- Auto-fetch new options based on input type
-                        local newOptions = {}
-                    
-                        if typeof(newOptionsSource) == "function" then
-                            -- If it's a function, call it to get options
-                            newOptions = newOptionsSource()
-                        elseif typeof(newOptionsSource) == "Instance" then
-                            -- If it's an Instance, get its children
-                            newOptions = newOptionsSource:GetChildren()
-                        elseif typeof(newOptionsSource) == "table" then
-                            -- If it's already a table, use it as-is
-                            newOptions = newOptionsSource
-                        else
-                            warn("Invalid options source provided!")
-                            return
-                        end
-                    
-                        -- Update settings and repopulate the dropdown
-                        self.Settings.Options = newOptions
-                    
-                        -- Add each option to the dropdown
-                        for i, v in ipairs(newOptions) do
-                            self:AddOption(v.Name or tostring(v)) -- Use Name if instance, otherwise tostring
-                        end
-                    
-                        print("Dropdown refreshed with", #newOptions, "options.")
                     end
+                    
 
 					function DropdownFunctions:IsOption(optionName)
 						if not optionName then return end
