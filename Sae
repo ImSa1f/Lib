@@ -3135,12 +3135,18 @@ function MacLib:Window(Settings)
 						end
 					end
 
-                    function DropdownFunctions:RefreshDropdown()
-                        if not self.Settings.Options or type(self.Settings.Options) ~= "table" then return end
+                    function DropdownFunctions:RefreshDropdown(updateFunction)
+                        self:ClearOptions()
+
+                        if updateFunction and type(updateFunction) == "function" then
+                            self.Settings.Options = updateFunction()
+                        end
+     
                         for i, v in pairs(self.Settings.Options) do
                             addOption(i, v)
                         end
                     end
+                    
                     
 					function DropdownFunctions:IsOption(optionName)
 						if not optionName then return end
