@@ -3007,10 +3007,18 @@ function MacLib:Window(Settings)
 							dropdown.Size = UDim2.new(1, 0, 0, CalculateDropdownSize())
 						end
 					end
+
+                    function DropdownFunctions:RefreshDropdown(options)
+                        if not newOptions then return end
+                        self:ClearOptions()
+                        self:InsertOptions(options)
+                    end
+
 					function DropdownFunctions:IsOption(optionName)
 						if not optionName then return end
 						return OptionObjs[optionName] ~= nil
 					end
+
 
 					if Flag then
 						MacLib.Options[Flag] = DropdownFunctions
@@ -3018,12 +3026,6 @@ function MacLib:Window(Settings)
 
 					return DropdownFunctions
 				end
-
-                function DropdownFunctions:RefreshDropdown(newOptions)
-                    if not newOptions then return end
-                    self:ClearOptions()
-                    self:InsertOptions(newOptions)
-                end
                 
 				function SectionFunctions:Colorpicker(Settings, Flag)
 					local ColorpickerFunctions = { Settings = Settings, IgnoreConfig = false, Class = "Colorpicker" }
