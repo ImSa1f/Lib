@@ -4395,11 +4395,7 @@ function MacLib:Window(Settings)
                         label.Visible = State
                     end
                     function LabelFunctions:Refresh()
-                        if typeof(self.Settings.Text) == "function" then
-                            labelText.Text = self.Settings.Text()
-                        else
-                            labelText.Text = self.Settings.Text or self.Settings.Name
-                        end
+                        labelText.Text = LabelFunctions.Settings.Text or LabelFunctions.Settings.Name
                     end
                 
                     if Flag then
