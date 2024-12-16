@@ -4395,7 +4395,11 @@ function MacLib:Window(Settings)
                         label.Visible = State
                     end
                     function LabelFunctions:Refresh()
-                        labelText.Text = self.Settings.Text or self.Settings.Name
+                        if typeof(self.Settings.Text) == "function" then
+                            labelText.Text = self.Settings.Text()
+                        else
+                            labelText.Text = self.Settings.Text or self.Settings.Name
+                        end
                     end
                 
                     if Flag then
@@ -4403,6 +4407,7 @@ function MacLib:Window(Settings)
                     end
                     return LabelFunctions
                 end
+                
 
 				function SectionFunctions:SubLabel(Settings, Flag)
 					local SubLabelFunctions = {Settings = Settings}
