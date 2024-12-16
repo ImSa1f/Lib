@@ -3014,6 +3014,7 @@ function MacLib:Window(Settings)
                     function DropdownFunctions:RefreshDropdown(newOptions)
                         if not newOptions or type(newOptions) ~= "table" then return end
                         self:ClearOptions()
+                        DropdownFunctions.Settings.Options = newOptions
                         for i, v in ipairs(newOptions) do
                             addOption(i, v) 
                         end
