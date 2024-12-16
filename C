@@ -3162,10 +3162,47 @@ function MacLib:Window(Settings)
                     
                     
                 
-					function DropdownFunctions:IsOption(optionName)
-						if not optionName then return end
-						return OptionObjs[optionName] ~= nil
-					end
+                    function DropdownFunctions:RefreshDropdown()
+                        -- Clear existing options
+                        self:ClearOptions()
+                    
+                        -- Fetch updated options dynamically
+                        local options = self.Settings.Options
+                    
+                        -- If Options is a function, execute it to get a fresh table
+                        if typeof(options) == "function" then
+                            local success, result = pcall(options)
+                            if success and type(result) == "table" then
+                                options = result
+                            else
+                                warn("Failed to refresh options from function.")
+                                return
+                            end
+                        elseif typeof(options) == "Instance" then
+                            -- If Options is an Instance (like game.Players), convert children to a table of names
+                            local newOptions = {}
+                            for _, child in pairs(options:GetChildren()) do
+                                table.insert(newOptions, child.Name)
+                            end
+                            options = newOptions
+                        end
+                    
+                        -- Ensure options is now a table
+                        if type(options) ~= "table" then
+                            warn("Options must resolve to a table.")
+                            return
+                        end
+                    
+                        -- Rebuild dropdown with refreshed options
+                        self.Settings.Options = options
+                        for i, v in pairs(options) do
+                            addOption(i, v)
+                        end
+                    
+                        -- Adjust dropdown size
+                        dropdown.Size = UDim2.new(1, 0, 0, CalculateDropdownSize())
+                    end
+                    
 
 
 					if Flag then
