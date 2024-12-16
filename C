@@ -3136,7 +3136,9 @@ function MacLib:Window(Settings)
 					end
 
                     function DropdownFunctions:RefreshDropdown()
+
                         if typeof(self.Settings.Options) == "function" then
+ 
                             local success, result = pcall(self.Settings.Options)
                             if success and type(result) == "table" then
                                 self.Settings.Options = result
@@ -3148,13 +3150,17 @@ function MacLib:Window(Settings)
                             warn("Options must be a table or function returning a table.")
                             return
                         end
-                    
+
                         self:ClearOptions()
-                    
+
                         for i, v in pairs(self.Settings.Options) do
                             addOption(i, v)
                         end
+
+                        dropdown.Size = UDim2.new(1, 0, 0, CalculateDropdownSize())
                     end
+                    
+                    
                 
 					function DropdownFunctions:IsOption(optionName)
 						if not optionName then return end
