@@ -3139,13 +3139,13 @@ function MacLib:Window(Settings)
                         self:ClearOptions()
                         if type(self.Settings.Options) == "table" then
                             for i, v in pairs(self.Settings.Options) do
-                                self:AddOption(i, v)
+                                self:addOption(i, v)
                             end
                         elseif type(self.Settings.Options) == "function" then
                             local options = self.Settings.Options() 
                             if type(options) == "table" then
                                 for i, v in pairs(options) do
-                                    self:AddOption(i, v)
+                                    self:addOption(i, v)
                                 end
                             end
                         end
