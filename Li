@@ -3034,6 +3034,13 @@ function MacLib:Window(Settings)
 					function DropdownFunctions:SetVisibility(State)
 						dropdown.Visible = State
 					end
+
+                    function DropdownFunctions:Refresh(NewOptions)
+                        local AlreadyOptions = DropdownFunctions:GetOptions()
+                        DropdownFunctions:ClearOptions()
+                        DropdownFunctions:InsertOptions(NewOptions)
+                    end
+
 					function DropdownFunctions:UpdateSelection(newSelection)
 						if not newSelection then return end
 
