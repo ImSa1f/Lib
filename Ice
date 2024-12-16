@@ -3135,18 +3135,12 @@ function MacLib:Window(Settings)
 						end
 					end
 
-                    function DropdownFunctions:RefreshDropdown(newOptions)
-                        print("Refreshing dropdown with options:", newOptions)
-                        for _, optionData in pairs(OptionObjs) do
-							optionData.Button:Destroy()
-						end
-                        self.Settings.Options = newOptions or self.Settings.Options
+                    function DropdownFunctions:RefreshDropdown()
                         for i, v in pairs(self.Settings.Options) do
                             addOption(i, v)
                         end
                     end
                     
-
 					function DropdownFunctions:IsOption(optionName)
 						if not optionName then return end
 						return OptionObjs[optionName] ~= nil
