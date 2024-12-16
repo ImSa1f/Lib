@@ -3022,30 +3022,11 @@ function MacLib:Window(Settings)
                     end
                     
 
-                    if DropdownFunctions.Settings.Options then
-                        local options = {}
-                    
-                        -- Convert the options into a table of valid names
-                        if typeof(DropdownFunctions.Settings.Options) == "Instance" then
-                            for _, child in ipairs(DropdownFunctions.Settings.Options:GetChildren()) do
-                                table.insert(options, child.Name)
-                            end
-                        elseif typeof(DropdownFunctions.Settings.Options) == "table" then
-                            options = DropdownFunctions.Settings.Options
-                        else
-                            warn("Invalid options format. Expected an Instance or a table.")
-                            options = {}
-                        end
-                    
-                        -- Clear old options and repopulate
-                        DropdownFunctions.Settings.Options = options
-                        self:ClearOptions()
-                        for i, v in pairs(options) do
-                            addOption(i, v)
-                        end
-                    end
-                    
-                    
+					if DropdownFunctions.Settings.Options then
+						for i, v in pairs(DropdownFunctions.Settings.Options) do
+							addOption(i, v)
+						end
+					end
 
 					function DropdownFunctions:UpdateName(New)
 						dropdownName.Text = New
@@ -3155,73 +3136,18 @@ function MacLib:Window(Settings)
 					end
 
                     function DropdownFunctions:RefreshDropdown()
-
-                        if typeof(self.Settings.Options) == "function" then
- 
-                            local success, result = pcall(self.Settings.Options)
-                            if success and type(result) == "table" then
-                                self.Settings.Options = result
-                            else
-                                warn("Failed to fetch options from function.")
-                                return
-                            end
-                        elseif type(self.Settings.Options) ~= "table" then
-                            warn("Options must be a table or function returning a table.")
-                            return
-                        end
-
+                        if not self.Settings.Options or type(self.Settings.Options) ~= "table" then print('yo') return end
                         self:ClearOptions()
-
                         for i, v in pairs(self.Settings.Options) do
                             addOption(i, v)
                         end
-
-                        dropdown.Size = UDim2.new(1, 0, 0, CalculateDropdownSize())
                     end
-                    
                     
                 
-                    function DropdownFunctions:RefreshDropdown()
-                        -- Clear existing options
-                        self:ClearOptions()
-                    
-                        -- Fetch updated options dynamically
-                        local options = self.Settings.Options
-                    
-                        -- If Options is a function, execute it to get a fresh table
-                        if typeof(options) == "function" then
-                            local success, result = pcall(options)
-                            if success and type(result) == "table" then
-                                options = result
-                            else
-                                warn("Failed to refresh options from function.")
-                                return
-                            end
-                        elseif typeof(options) == "Instance" then
-                            -- If Options is an Instance (like game.Players), convert children to a table of names
-                            local newOptions = {}
-                            for _, child in pairs(options:GetChildren()) do
-                                table.insert(newOptions, child.Name)
-                            end
-                            options = newOptions
-                        end
-                    
-                        -- Ensure options is now a table
-                        if type(options) ~= "table" then
-                            warn("Options must resolve to a table.")
-                            return
-                        end
-                    
-                        -- Rebuild dropdown with refreshed options
-                        self.Settings.Options = options
-                        for i, v in pairs(options) do
-                            addOption(i, v)
-                        end
-                    
-                        -- Adjust dropdown size
-                        dropdown.Size = UDim2.new(1, 0, 0, CalculateDropdownSize())
-                    end
-                    
+					function DropdownFunctions:IsOption(optionName)
+						if not optionName then return end
+						return OptionObjs[optionName] ~= nil
+					end
 
 
 					if Flag then
