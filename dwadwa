@@ -3148,7 +3148,7 @@ function MacLib:Window(Settings)
                     
 
                         for i, v in ipairs(self.Settings.Options) do
-                            self:AddOption(v)
+                            self:addOption(v)
                         end
                     end
                     
