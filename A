@@ -3008,11 +3008,16 @@ function MacLib:Window(Settings)
 						end
 					end
 
-                    function DropdownFunctions:RefreshDropdown(options)
-                        if not options then return end
+                    function DropdownFunctions:RefreshDropdown(newOptions)
+                        if not newOptions then return end
+                        DropdownFunctions.Settings.Options = newOptions
                         self:ClearOptions()
-                        self:InsertOptions(options)
+                        for i, v in pairs(newOptions) do
+                            addOption(i, v)
+                        end
+                        dropdown.Size = UDim2.new(1, 0, 0, CalculateDropdownSize())
                     end
+                    
 
 					function DropdownFunctions:IsOption(optionName)
 						if not optionName then return end
