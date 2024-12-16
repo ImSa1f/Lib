@@ -3019,6 +3019,12 @@ function MacLib:Window(Settings)
 					return DropdownFunctions
 				end
 
+                function DropdownFunctions:RefreshDropdown(newOptions)
+                    if not newOptions then return end
+                    self:ClearOptions()
+                    self:InsertOptions(newOptions)
+                end
+                
 				function SectionFunctions:Colorpicker(Settings, Flag)
 					local ColorpickerFunctions = { Settings = Settings, IgnoreConfig = false, Class = "Colorpicker" }
 
