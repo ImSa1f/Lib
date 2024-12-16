@@ -3011,13 +3011,16 @@ function MacLib:Window(Settings)
 						end
 					end
 
-                    function DropdownFunctions:RefreshDropdown(optionName)
-                        local optionsbruh = OptionObjs[optionName]
+                    function DropdownFunctions:RefreshDropdown(newOptions)
+                        if not newOptions or type(newOptions) ~= "table" then return end
                         self:ClearOptions()
-                        self.Settings.Options = optionsbruh
-                        self:InsertOptions(optionsbruh)
+                        self.Settings.Options = newOptions
+                        for i, v in pairs(newOptions) do
+                            addOption(i, v)
+                        end
+                        dropdown.Size = UDim2.new(1, 0, 0, CalculateDropdownSize())
                     end
-
+                
 					function DropdownFunctions:IsOption(optionName)
 						if not optionName then return end
 						return OptionObjs[optionName] ~= nil
