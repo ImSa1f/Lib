@@ -4394,8 +4394,8 @@ function MacLib:Window(Settings)
                     function LabelFunctions:SetVisibility(State)
                         label.Visible = State
                     end
-                    function LabelFunctions:Refresh()
-                        labelText.Text = LabelFunctions.Settings.Text or LabelFunctions.Settings.Name
+                    function LabelFunctions:Refresh(Fam)
+                        labelText.Text = Fam
                     end
                 
                     if Flag then
