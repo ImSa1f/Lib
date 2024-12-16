@@ -3022,11 +3022,30 @@ function MacLib:Window(Settings)
                     end
                     
 
-					if DropdownFunctions.Settings.Options then
-						for i, v in pairs(DropdownFunctions.Settings.Options) do
-							addOption(i, v)
-						end
-					end
+                    if DropdownFunctions.Settings.Options then
+                        local options = DropdownFunctions.Settings.Options
+                    
+                        if typeof(options) == "Instance" then
+                            local convertedOptions = {}
+                            for _, child in pairs(options:GetChildren()) do
+                                table.insert(convertedOptions, child.Name)
+                            end
+                            options = convertedOptions
+                        end
+                    
+                        if type(options) ~= "table" then
+                            warn("Invalid options provided. Options must be a table or an Instance with children.")
+                            options = {}
+                        end
+                    
+
+                        DropdownFunctions.Settings.Options = options
+
+                        for i, v in pairs(options) do
+                            addOption(i, v)
+                        end
+                    end
+                    
 
 					function DropdownFunctions:UpdateName(New)
 						dropdownName.Text = New
