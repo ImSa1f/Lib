@@ -3009,7 +3009,7 @@ function MacLib:Window(Settings)
 					end
 
                     function DropdownFunctions:RefreshDropdown(options)
-                        if not newOptions then return end
+                        if not options then return end
                         self:ClearOptions()
                         self:InsertOptions(options)
                     end
