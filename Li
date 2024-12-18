@@ -1951,34 +1951,48 @@ function MacLib:Window(Settings)
 
 					local dragging = false
 
-					local DisplayMethods = {
-						Hundredths = function(sliderValue) -- Deprecated use Settings.Precision
-							return string.format("%.2f", sliderValue)
-						end,
-						Tenths = function(sliderValue) -- Deprecated use Settings.Precision
-							return string.format("%.1f", sliderValue)
-						end,
-						Round = function(sliderValue, precision)
-							if precision then
-								return string.format("%." .. precision .. "f", sliderValue)
-							else
-								return tostring(math.round(sliderValue))
-							end
-						end,
-						Degrees = function(sliderValue, precision)
-							local formattedValue = precision and string.format("%." .. precision .. "f", sliderValue) or tostring(sliderValue)
-							return formattedValue .. "°"
-						end,
-						Percent = function(sliderValue, precision)
-							local percentage = (sliderValue - SliderFunctions.Settings.Minimum) / (SliderFunctions.Settings.Maximum - SliderFunctions.Settings.Minimum) * 100
-							return precision and string.format("%." .. precision .. "f", percentage) .. "%" or tostring(math.round(percentage)) .. "%"
-						end,
-						Value = function(sliderValue, precision)
-							return precision and string.format("%." .. precision .. "f", sliderValue) or tostring(sliderValue)
-						end
-					}
+                    local DisplayMethods = {
+                        Hundredths = function(sliderValue) -- Deprecated use Settings.Precision
+                            return string.format("%.2f", sliderValue)
+                        end,
+                        Tenths = function(sliderValue) -- Deprecated use Settings.Precision
+                            return string.format("%.1f", sliderValue)
+                        end,
+                        Round = function(sliderValue, precision)
+                            if precision then
+                                return string.format("%." .. precision .. "f", sliderValue)
+                            else
+                                return tostring(math.round(sliderValue))
+                            end
+                        end,
+                        Degrees = function(sliderValue, precision)
+                            local formattedValue = precision and string.format("%." .. precision .. "f", sliderValue) or tostring(sliderValue)
+                            return formattedValue .. "°"
+                        end,
+                        Percent = function(sliderValue, precision)
+                            local percentage = (sliderValue - SliderFunctions.Settings.Minimum) / (SliderFunctions.Settings.Maximum - SliderFunctions.Settings.Minimum) * 100
+                            return precision and string.format("%." .. precision .. "f", percentage) .. "%" or tostring(math.round(percentage)) .. "%"
+                        end,
+                        Value = function(sliderValue, precision)
+                            return precision and string.format("%." .. precision .. "f", sliderValue) or tostring(sliderValue)
+                        end,
+                        Formatter = function(sliderValue)
+                            if sliderValue >= 1e12 then
+                                return string.format("%.1fT", sliderValue / 1e12)
+                            elseif sliderValue >= 1e9 then
+                                return string.format("%.1fB", sliderValue / 1e9) 
+                            elseif sliderValue >= 1e6 then
+                                return string.format("%.1fM", sliderValue / 1e6) 
+                            elseif sliderValue >= 1e3 then
+                                return string.format("%.1fK", sliderValue / 1e3) 
+                            else
+                                return tostring(sliderValue)
+                            end
+                        end,
+                    }                    
 
 					local ValueDisplayMethod = DisplayMethods[SliderFunctions.Settings.DisplayMethod] or DisplayMethods.Value
+                    
 					local finalValue
 
 					local function SetValue(val, ignorecallback)
@@ -4886,7 +4900,7 @@ function MacLib:Window(Settings)
 					Callback = function()
 						local name = configSelection.Value
 						writefile(MacLib.Folder .. "/settings/autoload.txt", name)
-						autoloadLabel:SetDesc("Autoload config: " .. name)
+						autoloadLabel:UpdateName("Autoload config: " .. name)
 						WindowFunctions:Notify({
 							Title = "Interface",
 							Description = string.format("Set %q as autoload", name),
