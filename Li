@@ -1992,7 +1992,7 @@ function MacLib:Window(Settings)
                     }                    
 
 					local ValueDisplayMethod = DisplayMethods[SliderFunctions.Settings.DisplayMethod] or DisplayMethods.Value
-                    
+
 					local finalValue
 
 					local function SetValue(val, ignorecallback)
@@ -2042,28 +2042,38 @@ function MacLib:Window(Settings)
 						end
 					end)
 
-					sliderValue.FocusLost:Connect(function(enterPressed)
-						local inputText = sliderValue.Text
-						local value, isPercent = inputText:match("^(%-?%d+%.?%d*)(%%?)$")
+                    sliderValue.FocusLost:Connect(function(enterPressed)
+                        local inputText = sliderValue.Text:upper()
+                        local multiplier = 1
+                        local value, unitOrPercent = inputText:match("^(%-?%d+%.?%d*)([KMBT%%]?)$")
 
-						if value then
-							value = tonumber(value)
-							isPercent = isPercent == "%"
+                        if value then
+                            value = tonumber(value)
 
-							if isPercent then
-								value = SliderFunctions.Settings.Minimum + (value / 100) * (SliderFunctions.Settings.Maximum - SliderFunctions.Settings.Minimum)
-							end
+                            if unitOrPercent == "%" then
+                                value = SliderFunctions.Settings.Minimum + (value / 100) * (SliderFunctions.Settings.Maximum - SliderFunctions.Settings.Minimum)
+                            elseif unitOrPercent == "K" then
+                                multiplier = 1e3 
+                            elseif unitOrPercent == "M" then
+                                multiplier = 1e6 
+                            elseif unitOrPercent == "B" then
+                                multiplier = 1e9 
+                            elseif unitOrPercent == "T" then
+                                multiplier = 1e12 
+                            end
 
-							local newValue = math.clamp(value, SliderFunctions.Settings.Minimum, SliderFunctions.Settings.Maximum)
-							SetValue(newValue)
-						else
-							sliderValue.Text = ValueDisplayMethod(sliderValue)
-						end
+                            local finalValue = value * multiplier
+                            local clampedValue = math.clamp(finalValue, SliderFunctions.Settings.Minimum, SliderFunctions.Settings.Maximum)
+                            SetValue(clampedValue, true) 
+                            sliderValue.Text = ValueDisplayMethod(clampedValue, SliderFunctions.Settings.Precision)
 
-						if SliderFunctions.Settings.onInputComplete then
-							SliderFunctions.Settings.onInputComplete(finalValue)
-						end
-					end)
+                            if SliderFunctions.Settings.onInputComplete then
+                                SliderFunctions.Settings.onInputComplete(clampedValue)
+                            end
+                        else
+                            sliderValue.Text = ValueDisplayMethod(SliderFunctions.Value, SliderFunctions.Settings.Precision)
+                        end
+                    end)
 
 					UserInputService.InputChanged:Connect(function(input)
 						if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
