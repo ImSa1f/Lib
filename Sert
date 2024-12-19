@@ -1,3 +1,4 @@
+print('cuh')
 local MacLib = { 
 	Options = {}, 
 	Folder = "Maclib", 
@@ -96,10 +97,24 @@ local function MakeResizable(frame)
     game:GetService("UserInputService").InputChanged:Connect(function(input)
         if resizing and input.UserInputType == Enum.UserInputType.MouseMovement then
             local delta = Vector2.new(input.Position.X, input.Position.Y) - startPos
-            frame.Size = UDim2.new(0, math.max(400, startSize.X.Offset + delta.X), 0, math.max(300, startSize.Y.Offset + delta.Y))
+            frame.Size = UDim2.new(
+                0, math.max(400, startSize.X.Offset + delta.X), -- Minimum width
+                0, math.max(300, startSize.Y.Offset + delta.Y)  -- Minimum height
+            )
+
+            -- Ensure all child layouts adjust dynamically
+            for _, child in pairs(frame:GetChildren()) do
+                if child:IsA("UIListLayout") or child:IsA("UIPadding") then
+                    -- Layouts will automatically adjust
+                elseif child:IsA("Frame") or child:IsA("TextButton") then
+                    -- Ensure child elements respect frame resizing if necessary
+                    child.Size = UDim2.new(child.Size.X.Scale, child.Size.X.Offset, child.Size.Y.Scale, child.Size.Y.Offset)
+                end
+            end
         end
     end)
 end
+
 
 function MacLib:Window(Settings)
     local WindowFunctions = {Settings = Settings}
