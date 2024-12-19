@@ -1,3 +1,4 @@
+print('hi')
 local MacLib = { 
 	Options = {}, 
 	Folder = "Maclib", 
@@ -71,7 +72,6 @@ local function MakeResizable(frame)
     local resizing = false
     local startSize, startPos
 
-    -- Create a resize handle
     local ResizeHandle = Instance.new("Frame")
     ResizeHandle.Size = UDim2.new(0, 10, 0, 10)
     ResizeHandle.Position = UDim2.new(1, -10, 1, -10)
@@ -80,7 +80,6 @@ local function MakeResizable(frame)
     ResizeHandle.BorderSizePixel = 0
     ResizeHandle.Parent = frame
 
-    -- Track resizing state
     ResizeHandle.InputBegan:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 then
             resizing = true
@@ -95,16 +94,14 @@ local function MakeResizable(frame)
         end
     end)
 
-    -- Handle resizing
     game:GetService("UserInputService").InputChanged:Connect(function(input)
         if resizing and input.UserInputType == Enum.UserInputType.MouseMovement then
             local delta = Vector2.new(input.Position.X, input.Position.Y) - startPos
             frame.Size = UDim2.new(0, math.max(400, startSize.X.Offset + delta.X), 0, math.max(300, startSize.Y.Offset + delta.Y))
 
-            -- Dynamically adjust child elements
             for _, child in pairs(frame:GetChildren()) do
                 if child:IsA("Frame") or child:IsA("TextButton") then
-                    child.Size = UDim2.new(0.9, 0, 0, child.Size.Y.Offset) -- Example: Adjust width
+                    child.Size = UDim2.new(0.9, 0, 0, child.Size.Y.Offset)
                 elseif child:IsA("UIListLayout") or child:IsA("UIPadding") then
                 end
             end
@@ -113,69 +110,66 @@ local function MakeResizable(frame)
 end
 
 function MacLib:Window(Settings)
-	local WindowFunctions = {Settings = Settings}
-	if Settings.AcrylicBlur ~= nil then
-		acrylicBlur = Settings.AcrylicBlur
-	else
-		acrylicBlur = true
-	end
+    local WindowFunctions = {Settings = Settings}
+    local acrylicBlur = Settings.AcrylicBlur ~= nil and Settings.AcrylicBlur or true
 
-	local macLib = GetGui()
+    local macLib = GetGui()
 
-	local notifications = Instance.new("Frame")
-	notifications.Name = "Notifications"
-	notifications.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-	notifications.BackgroundTransparency = 1
-	notifications.BorderColor3 = Color3.fromRGB(0, 0, 0)
-	notifications.BorderSizePixel = 0
-	notifications.Size = UDim2.fromScale(1, 1)
-	notifications.Parent = macLib
-	notifications.ZIndex = 2
+    local notifications = Instance.new("Frame")
+    notifications.Name = "Notifications"
+    notifications.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    notifications.BackgroundTransparency = 1
+    notifications.BorderColor3 = Color3.fromRGB(0, 0, 0)
+    notifications.BorderSizePixel = 0
+    notifications.Size = UDim2.fromScale(1, 1)
+    notifications.Parent = macLib
+    notifications.ZIndex = 2
 
-	local notificationsUIListLayout = Instance.new("UIListLayout")
-	notificationsUIListLayout.Name = "NotificationsUIListLayout"
-	notificationsUIListLayout.Padding = UDim.new(0, 10)
-	notificationsUIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Right
-	notificationsUIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-	notificationsUIListLayout.VerticalAlignment = Enum.VerticalAlignment.Bottom
-	notificationsUIListLayout.Parent = notifications
+    local notificationsUIListLayout = Instance.new("UIListLayout")
+    notificationsUIListLayout.Name = "NotificationsUIListLayout"
+    notificationsUIListLayout.Padding = UDim.new(0, 10)
+    notificationsUIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Right
+    notificationsUIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    notificationsUIListLayout.VerticalAlignment = Enum.VerticalAlignment.Bottom
+    notificationsUIListLayout.Parent = notifications
 
-	local notificationsUIPadding = Instance.new("UIPadding")
-	notificationsUIPadding.Name = "NotificationsUIPadding"
-	notificationsUIPadding.PaddingBottom = UDim.new(0, 10)
-	notificationsUIPadding.PaddingLeft = UDim.new(0, 10)
-	notificationsUIPadding.PaddingRight = UDim.new(0, 10)
-	notificationsUIPadding.PaddingTop = UDim.new(0, 10)
-	notificationsUIPadding.Parent = notifications
+    local notificationsUIPadding = Instance.new("UIPadding")
+    notificationsUIPadding.Name = "NotificationsUIPadding"
+    notificationsUIPadding.PaddingBottom = UDim.new(0, 10)
+    notificationsUIPadding.PaddingLeft = UDim.new(0, 10)
+    notificationsUIPadding.PaddingRight = UDim.new(0, 10)
+    notificationsUIPadding.PaddingTop = UDim.new(0, 10)
+    notificationsUIPadding.Parent = notifications
 
-	local base = Instance.new("Frame")
-	base.Name = "Base"
-	base.AnchorPoint = Vector2.new(0.5, 0.5)
-	base.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-	base.BackgroundTransparency = Settings.AcrylicBlur and 0.05 or 0
-	base.BorderColor3 = Color3.fromRGB(0, 0, 0)
-	base.BorderSizePixel = 0
-	base.Position = UDim2.fromScale(0.5, 0.5)
-	base.Size = Settings.Size or UDim2.fromOffset(868, 650)
+    local base = Instance.new("Frame")
+    base.Name = "Base"
+    base.AnchorPoint = Vector2.new(0.5, 0.5)
+    base.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+    base.BackgroundTransparency = acrylicBlur and 0.05 or 0
+    base.BorderColor3 = Color3.fromRGB(0, 0, 0)
+    base.BorderSizePixel = 0
+    base.Position = UDim2.fromScale(0.5, 0.5)
+    base.Size = Settings.Size or UDim2.fromOffset(868, 650)
 
-	local baseUIScale = Instance.new("UIScale")
-	baseUIScale.Name = "BaseUIScale"
-	baseUIScale.Parent = base
+    local baseUIScale = Instance.new("UIScale")
+    baseUIScale.Name = "BaseUIScale"
+    baseUIScale.Parent = base
 
-	local baseUICorner = Instance.new("UICorner")
-	baseUICorner.Name = "BaseUICorner"
-	baseUICorner.CornerRadius = UDim.new(0, 10)
-	baseUICorner.Parent = base
+    local baseUICorner = Instance.new("UICorner")
+    baseUICorner.Name = "BaseUICorner"
+    baseUICorner.CornerRadius = UDim.new(0, 10)
+    baseUICorner.Parent = base
 
-	local baseUIStroke = Instance.new("UIStroke")
-	baseUIStroke.Name = "BaseUIStroke"
-	baseUIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-	baseUIStroke.Color = Color3.fromRGB(255, 255, 255)
-	baseUIStroke.Transparency = 0.9
-	baseUIStroke.Parent = base
+    local baseUIStroke = Instance.new("UIStroke")
+    baseUIStroke.Name = "BaseUIStroke"
+    baseUIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+    baseUIStroke.Color = Color3.fromRGB(255, 255, 255)
+    baseUIStroke.Transparency = 0.9
+    baseUIStroke.Parent = base
 
     MakeResizable(base)
-    
+
+
 	local sidebar = Instance.new("Frame")
 	sidebar.Name = "Sidebar"
 	sidebar.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
