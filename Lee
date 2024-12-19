@@ -1,3 +1,4 @@
+print('aa')
 local MacLib = { 
 	Options = {}, 
 	Folder = "Maclib", 
@@ -72,9 +73,9 @@ local function MakeResizable(frame)
     local startSize, startPos
 
     local ResizeHandle = Instance.new("Frame")
-    ResizeHandle.Size = UDim2.new(1, 0, 0, 10) 
-    ResizeHandle.Position = UDim2.new(0, 0, 1, -10)
-    ResizeHandle.AnchorPoint = Vector2.new(0, 1)
+    ResizeHandle.Size = UDim2.new(0, 10, 0, 10)
+    ResizeHandle.Position = UDim2.new(1, -10, 1, -10)
+    ResizeHandle.AnchorPoint = Vector2.new(1, 1)
     ResizeHandle.BackgroundColor3 = Color3.new(1, 1, 1)
     ResizeHandle.BorderSizePixel = 0
     ResizeHandle.Parent = frame
@@ -95,12 +96,11 @@ local function MakeResizable(frame)
 
     game:GetService("UserInputService").InputChanged:Connect(function(input)
         if resizing and input.UserInputType == Enum.UserInputType.MouseMovement then
-            local deltaY = input.Position.Y - startPos.Y
-            frame.Size = UDim2.new(frame.Size.X.Scale, frame.Size.X.Offset, 0, math.max(300, startSize.Y.Offset + deltaY))
+            local delta = Vector2.new(input.Position.X, input.Position.Y) - startPos
+            frame.Size = UDim2.new(0, math.max(400, startSize.X.Offset + delta.X), 0, math.max(300, startSize.Y.Offset + delta.Y))
         end
     end)
 end
-
 
 function MacLib:Window(Settings)
     local WindowFunctions = {Settings = Settings}
