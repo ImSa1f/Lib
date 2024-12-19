@@ -98,15 +98,19 @@ local function MakeResizable(frame)
             local delta = Vector2.new(input.Position.X, input.Position.Y) - startPos
             frame.Size = UDim2.new(0, math.max(400, startSize.X.Offset + delta.X), 0, math.max(300, startSize.Y.Offset + delta.Y))
 
+            -- Dynamically adjust only the frame, leave child layout handling to UI constraints
             for _, child in pairs(frame:GetChildren()) do
-                if child:IsA("Frame") or child:IsA("TextButton") then
-                    child.Size = UDim2.new(0.9, 0, 0, child.Size.Y.Offset)
-                elseif child:IsA("UIListLayout") or child:IsA("UIPadding") then
+                if child:IsA("UIListLayout") or child:IsA("UIPadding") then
+                    -- Child layouts automatically adjust
+                elseif child:IsA("Frame") or child:IsA("TextButton") then
+                    -- Prevent modifying child sizes unless necessary
+                    child.Size = child.Size -- Respect their original properties
                 end
             end
         end
     end)
 end
+
 
 function MacLib:Window(Settings)
     local WindowFunctions = {Settings = Settings}
