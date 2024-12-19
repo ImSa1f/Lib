@@ -1,4 +1,4 @@
-print('yo')
+print('ice')
 local MacLib = { 
 	Options = {}, 
 	Folder = "Maclib", 
@@ -74,14 +74,21 @@ local function MakeResizable(frame)
     local resizing = false
     local startSize, startPos
 
+    -- Create the Resize Handle
     local ResizeHandle = Instance.new("Frame")
-    ResizeHandle.Size = UDim2.new(1, 0, 0, 2)
-    ResizeHandle.Position = UDim2.new(0, 0, 1, -2)
+    ResizeHandle.Size = UDim2.new(1, 0, 0, 4)
+    ResizeHandle.Position = UDim2.new(0, 0, 1, -4)
     ResizeHandle.AnchorPoint = Vector2.new(0, 1)
-    ResizeHandle.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
+    ResizeHandle.BackgroundColor3 = Color3.fromRGB(150, 150, 150)
     ResizeHandle.BorderSizePixel = 0
     ResizeHandle.Parent = frame
 
+    -- Add rounded corners to the Resize Handle
+    local UICorner = Instance.new("UICorner")
+    UICorner.CornerRadius = UDim.new(0, 2) -- Slight rounding for a subtle modern look
+    UICorner.Parent = ResizeHandle
+
+    -- Handle Input
     ResizeHandle.InputBegan:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 then
             resizing = true
@@ -96,6 +103,7 @@ local function MakeResizable(frame)
         end
     end)
 
+    -- Resize Logic
     game:GetService("UserInputService").InputChanged:Connect(function(input)
         if resizing and input.UserInputType == Enum.UserInputType.MouseMovement then
             local deltaY = input.Position.Y - startPos.Y
