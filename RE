@@ -1,3 +1,4 @@
+print('zaa')
 local MacLib = { 
 	Options = {}, 
 	Folder = "Maclib", 
@@ -100,14 +101,17 @@ local function MakeResizable(frame)
                 0, math.max(400, startSize.X.Offset + delta.X), -- Minimum width
                 0, math.max(300, startSize.Y.Offset + delta.Y)  -- Minimum height
             )
-    
+
             for _, child in pairs(frame:GetChildren()) do
                 if child.Name == "Sidebar" then
-                    child.Size = UDim2.new(0.325, 0, 1, 0) -- Adjust to maintain 32.5% of base width
+                    child.Position = UDim2.new(0, 0, 0, 0) -- Always aligned to the left
+                    child.Size = UDim2.new(0.325, 0, 1, 0) -- 32.5% of frame width
+                elseif child:IsA("Frame") or child:IsA("TextButton") then
+                    -- Adjust other children if needed
                 end
             end
         end
-    end)    
+    end)
 end
 
 function MacLib:Window(Settings)
