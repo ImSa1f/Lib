@@ -1,3 +1,4 @@
+print('yo')
 local MacLib = { 
 	Options = {}, 
 	Folder = "Maclib", 
@@ -72,9 +73,9 @@ local function MakeResizable(frame)
     local startSize, startPos
 
     local ResizeHandle = Instance.new("Frame")
-    ResizeHandle.Size = UDim2.new(0, 10, 0, 10)
-    ResizeHandle.Position = UDim2.new(1, -10, 1, -10)
-    ResizeHandle.AnchorPoint = Vector2.new(1, 1)
+    ResizeHandle.Size = UDim2.new(1, 0, 0, 10)
+    ResizeHandle.Position = UDim2.new(0, 0, 1, -10)
+    ResizeHandle.AnchorPoint = Vector2.new(0, 1)
     ResizeHandle.BackgroundColor3 = Color3.new(1, 1, 1)
     ResizeHandle.BorderSizePixel = 0
     ResizeHandle.Parent = frame
@@ -95,22 +96,11 @@ local function MakeResizable(frame)
 
     game:GetService("UserInputService").InputChanged:Connect(function(input)
         if resizing and input.UserInputType == Enum.UserInputType.MouseMovement then
-            local delta = Vector2.new(input.Position.X, input.Position.Y) - startPos
-            frame.Size = UDim2.new(0, math.max(400, startSize.X.Offset + delta.X), 0, math.max(300, startSize.Y.Offset + delta.Y))
-
-            -- Dynamically adjust only the frame, leave child layout handling to UI constraints
-            for _, child in pairs(frame:GetChildren()) do
-                if child:IsA("UIListLayout") or child:IsA("UIPadding") then
-                    -- Child layouts automatically adjust
-                elseif child:IsA("Frame") or child:IsA("TextButton") then
-                    -- Prevent modifying child sizes unless necessary
-                    child.Size = child.Size -- Respect their original properties
-                end
-            end
+            local deltaY = input.Position.Y - startPos.Y
+            frame.Size = UDim2.new(startSize.X.Scale, startSize.X.Offset, 0, math.max(300, startSize.Y.Offset + deltaY))
         end
     end)
 end
-
 
 function MacLib:Window(Settings)
     local WindowFunctions = {Settings = Settings}
