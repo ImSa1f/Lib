@@ -67,6 +67,49 @@ local function Tween(instance, tweeninfo, propertytable)
 end
 
 --// Library Functions
+local function MakeResizable(frame)
+    local resizing = false
+    local startSize, startPos
+
+    local ResizeHandle = Instance.new("Frame")
+    ResizeHandle.Size = UDim2.new(0, 10, 0, 10)
+    ResizeHandle.Position = UDim2.new(1, -10, 1, -10)
+    ResizeHandle.AnchorPoint = Vector2.new(1, 1)
+    ResizeHandle.BackgroundColor3 = Color3.new(1, 1, 1)
+    ResizeHandle.BorderSizePixel = 0
+    ResizeHandle.Parent = frame
+
+    ResizeHandle.MouseEnter:Connect(function()
+        UserInputService.MouseIconEnabled = true
+    end)
+
+    ResizeHandle.MouseLeave:Connect(function()
+        UserInputService.MouseIconEnabled = false
+    end)
+
+    ResizeHandle.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            resizing = true
+            startSize = frame.Size
+            startPos = Vector2.new(input.Position.X, input.Position.Y)
+        end
+    end)
+
+    UserInputService.InputChanged:Connect(function(input)
+        if resizing and input.UserInputType == Enum.UserInputType.MouseMovement then
+            local delta = Vector2.new(input.Position.X, input.Position.Y) - startPos
+            frame.Size = UDim2.new(0, math.max(200, startSize.X.Offset + delta.X), 0, math.max(150, startSize.Y.Offset + delta.Y))
+        end
+    end)
+
+    UserInputService.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            resizing = false
+        end
+    end)
+end
+
+
 function MacLib:Window(Settings)
 	local WindowFunctions = {Settings = Settings}
 	if Settings.AcrylicBlur ~= nil then
@@ -128,6 +171,8 @@ function MacLib:Window(Settings)
 	baseUIStroke.Color = Color3.fromRGB(255, 255, 255)
 	baseUIStroke.Transparency = 0.9
 	baseUIStroke.Parent = base
+
+    MakeResizable(base)
 
 	local sidebar = Instance.new("Frame")
 	sidebar.Name = "Sidebar"
