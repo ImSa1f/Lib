@@ -75,7 +75,7 @@ local function MakeResizable(frame)
     ResizeHandle.Size = UDim2.new(0, 10, 0, 10)
     ResizeHandle.Position = UDim2.new(1, -10, 1, -10)
     ResizeHandle.AnchorPoint = Vector2.new(1, 1)
-    ResizeHandle.BackgroundColor3 = Color3.new(1, 1, 1)
+    ResizeHandle.BackgroundTransparency = 1 -- Make the resize handle invisible
     ResizeHandle.BorderSizePixel = 0
     ResizeHandle.Parent = frame
 
@@ -95,34 +95,14 @@ local function MakeResizable(frame)
 
     game:GetService("UserInputService").InputChanged:Connect(function(input)
         if resizing and input.UserInputType == Enum.UserInputType.MouseMovement then
-            local delta = Vector2.new(input.Position.X, input.Position.Y) - startPos
+            local deltaY = input.Position.Y - startPos.Y
             frame.Size = UDim2.new(
-                0, math.max(400, startSize.X.Offset + delta.X),
-                0, math.max(300, startSize.Y.Offset + delta.Y)
+                startSize.X.Scale, startSize.X.Offset, -- Keep width unchanged
+                0, math.max(300, startSize.Y.Offset + deltaY) -- Adjust only height
             )
-
-            for _, child in pairs(frame:GetChildren()) do
-                if child:IsA("TextButton") then
-                    child.Position = UDim2.new(
-                        1, -child.Size.X.Offset - 10, -- 10px offset from the right
-                        child.Position.Y.Scale, child.Position.Y.Offset -- Maintain Y position
-                    )
-                elseif child:IsA("Frame") then
-                    for _, grandchild in pairs(child:GetChildren()) do
-                        if grandchild:IsA("TextButton") then
-                            grandchild.Position = UDim2.new(
-                                1, -grandchild.Size.X.Offset - 10, -- Align grandchild buttons
-                                grandchild.Position.Y.Scale, grandchild.Position.Y.Offset
-                            )
-                        end
-                    end
-                end
-            end
         end
     end)
 end
-
-
 
 function MacLib:Window(Settings)
     local WindowFunctions = {Settings = Settings}
