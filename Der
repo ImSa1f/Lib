@@ -1,4 +1,4 @@
-print('Der')
+Print('Suh')
 local MacLib = { 
 	Options = {}, 
 	Folder = "Maclib", 
@@ -98,22 +98,17 @@ local function MakeResizable(frame)
         if resizing and input.UserInputType == Enum.UserInputType.MouseMovement then
             local delta = Vector2.new(input.Position.X, input.Position.Y) - startPos
             frame.Size = UDim2.new(
-                0, math.max(400, startSize.X.Offset + delta.X),
-                0, math.max(300, startSize.Y.Offset + delta.Y)
+                0, math.max(400, startSize.X.Offset + delta.X), -- Minimum width
+                0, math.max(300, startSize.Y.Offset + delta.Y)  -- Minimum height
             )
-
-            -- Adjust child elements dynamically
+    
             for _, child in pairs(frame:GetChildren()) do
-                if child:IsA("Frame") or child:IsA("TextButton") then
-                    if child.Name == "Sidebar" then
-                        child.Size = UDim2.new(0.25, 0, 1, 0) -- Example: Sidebar occupies 25% width
-                    else
-                        child.Size = UDim2.new(1, 0, child.Size.Y.Scale, child.Size.Y.Offset) -- Adjust width
-                    end
+                if child.Name == "Sidebar" then
+                    child.Size = UDim2.new(0.325, 0, 1, 0) -- Adjust to maintain 32.5% of base width
                 end
             end
         end
-    end)
+    end)    
 end
 
 function MacLib:Window(Settings)
