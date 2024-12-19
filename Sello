@@ -1,3 +1,4 @@
+print('yo')
 local MacLib = { 
 	Options = {}, 
 	Folder = "Maclib", 
@@ -67,44 +68,31 @@ local function Tween(instance, tweeninfo, propertytable)
 end
 
 --// Library Functions
+
+
 local function MakeResizable(frame)
     local resizing = false
     local startSize, startPos
 
     local ResizeHandle = Instance.new("Frame")
-    ResizeHandle.Size = UDim2.new(0, 10, 0, 10)
-    ResizeHandle.Position = UDim2.new(1, -10, 1, -10)
-    ResizeHandle.AnchorPoint = Vector2.new(1, 1)
+    ResizeHandle.Size = UDim2.new(1, 0, 0, 2)
+    ResizeHandle.Position = UDim2.new(0, 0, 1, -2)
+    ResizeHandle.AnchorPoint = Vector2.new(0, 1)
     ResizeHandle.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
     ResizeHandle.BorderSizePixel = 0
     ResizeHandle.Parent = frame
-
-    local Indicator = Instance.new("TextLabel")
-    Indicator.Size = UDim2.new(0, 50, 0, 20)
-    Indicator.Position = UDim2.new(1, -60, 1, -30)
-    Indicator.AnchorPoint = Vector2.new(1, 1)
-    Indicator.BackgroundTransparency = 0.5
-    Indicator.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-    Indicator.TextColor3 = Color3.fromRGB(255, 255, 255)
-    Indicator.TextScaled = true
-    Indicator.Font = Enum.Font.SourceSans
-    Indicator.Text = "Resize"
-    Indicator.Visible = false
-    Indicator.Parent = frame
 
     ResizeHandle.InputBegan:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 then
             resizing = true
             startSize = frame.Size
             startPos = Vector2.new(input.Position.X, input.Position.Y)
-            Indicator.Visible = true
         end
     end)
 
     ResizeHandle.InputEnded:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 then
             resizing = false
-            Indicator.Visible = false
         end
     end)
 
@@ -118,7 +106,6 @@ local function MakeResizable(frame)
         end
     end)
 end
-
 
 function MacLib:Window(Settings)
     local WindowFunctions = {Settings = Settings}
